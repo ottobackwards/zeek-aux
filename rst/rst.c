@@ -209,7 +209,7 @@ void send_pkt(int s, struct in_addr from, int from_port, u_int32_t from_seq,
 	} else if ( size > 0 )
 		{
 		const char *fill_string =
-			(inject && *inject) ? inject : "BRO-RST\n";
+			(inject && *inject) ? inject : "ZEEK-RST\n";
 		char *payload = &pkt[40];
 		int n = strlen(fill_string);
 		int i;

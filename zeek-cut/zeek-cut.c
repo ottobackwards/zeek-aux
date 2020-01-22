@@ -481,12 +481,8 @@ int zeek_cut(struct useropts bopts) {
 int main(int argc, char *argv[]) {
     int c;
     char *envtimefmt = getenv("ZEEK_CUT_TIMEFMT");
-    if (envtimefmt == NULL) {
-        envtimefmt = getenv("BRO_CUT_TIMEFMT");
-    }
 
     struct useropts bopts;
-
     bopts.showhdr = 0;
     bopts.negate = 0;
     bopts.timeconv = 0;
