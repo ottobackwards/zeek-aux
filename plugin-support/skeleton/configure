@@ -152,10 +152,6 @@ if [ -z "$zeekdist" ]; then
             append_cache_entry BROKER_ROOT_DIR PATH `${zeek_config} --broker_root`
         fi
 
-        # BRO_DIST is needed to support legacy Bro plugins
-        append_cache_entry BRO_DIST  PATH $zeekdist
-        append_cache_entry CMAKE_MODULE_PATH PATH $zeekdist/cmake
-
         if [ -z "$caf_root" ]; then
             append_cache_entry CAF_ROOT_DIR PATH `${zeek_config} --caf_root`
         fi
@@ -168,11 +164,12 @@ else
       echo "$zeekdist does not appear to be a valid Zeek source tree."
       exit 1
     fi
-
-    # BRO_DIST is needed to support legacy Bro plugins
-    append_cache_entry BRO_DIST  PATH $zeekdist
-    append_cache_entry CMAKE_MODULE_PATH PATH $zeekdist/cmake
 fi
+
+# BRO_DIST is needed to support legacy Bro plugins
+append_cache_entry BRO_DIST  PATH $zeekdist
+append_cache_entry ZEEK_DIST PATH $zeekdist
+append_cache_entry CMAKE_MODULE_PATH PATH $zeekdist/cmake
 
 if [ "$installroot" != "default" ]; then
     mkdir -p $installroot
