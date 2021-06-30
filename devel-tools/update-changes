@@ -233,7 +233,10 @@ function check_release_tag
         git tag -a $release -m "Version tag"
         echo "Tagged with new tag $release and moved tag 'release' to here."
         echo
-        echo "IMPORTANT: Don't forget to 'git push --tags'."
+        echo "Push with: "
+        echo
+        echo "    git push --delete origin $release_tag && git push --follow-tags"
+        echo
     fi
 }
 
@@ -247,7 +250,10 @@ function check_beta_tag
         git tag -a $beta -m "Beta version tag"
         echo "Tagged with new tag $beta and moved tag 'beta' to here."
         echo
-        echo "IMPORTANT: Don't forget to 'git push --tags'."
+        echo "Push with: "
+        echo
+        echo "    git push --delete origin $beta_tag && git push --follow-tags"
+        echo
     fi
 }
 
