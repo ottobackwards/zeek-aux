@@ -51,8 +51,8 @@ function usage
     echo "usage: `basename $0` [options]"
     echo
     echo "    -p <rev>    Explicitly name the past revision to compare with."
-    echo "    -R <tag>    Tag the current revision as a release. Use VERSION to use that."
-    echo "    -B <tag>    Tag the current revision as a beta release. Use VERSION to use that."
+    echo "    -R [<tag>]  Tag the current revision as a release. Update VERSION to use that. If tag is skipped, use next minor version."
+    echo "    -B <tag>    Tag the current revision as a beta release. Update VERSION to use that."
     echo "    -I          Initialize a new, initially empty CHANGES file."
     echo "    -c          Check whether CHANGES is up to date."
     echo
@@ -269,6 +269,18 @@ EOF
    fi
 }
 
+function get_release_version {
+    # If $1 is provided, return that. Otherwise look for most recent release
+    # version in CHANGES and increase its minor version.
+    test -n "$1" && echo "$1" && return
+    old=$(cat $file_changes | grep '^[0-9]*\.[0-9]*\.[0-9] ' | cut -d ' ' -f 1 | head -1)
+    test -z "${old}" && echo "" && return
+    minor=$(echo ${old} | cut -d . -f 3)
+    minor=$((${minor} + 1))
+    new="$(echo ${old} | cut -d . -f 1-2).${minor}"
+    echo v${new}
+}
+
 ######
 
 last_rev=""
@@ -278,10 +290,16 @@ init=0
 check=0
 quiet=0
 
-while getopts "hp:R:B:Ic" opt; do
+while getopts "hp:rR:B:Ic" opt; do
     case "$opt" in
         p) last_rev="$OPTARG";;
         R) release="$OPTARG";;
+        r) release=$(get_release_version);
+           if [ -z "${release}" ]; then
+            echo "Cannot determine release version."
+            exit 1
+            fi
+            ;;
         B) beta="$OPTARG";;
         I) init=1;;
         c) check=1; quiet=1;;
